@@ -1,9 +1,8 @@
 import { allPosts } from "contentlayer/generated";
 import { compareDesc } from "date-fns";
 
-import { Mdx } from "~/components/mdx-components";
-
 import "~/styles/mdx.css";
+import Navigation from "./_components/navigation";
 
 export default async function Home() {
   const posts = allPosts
@@ -13,16 +12,9 @@ export default async function Home() {
     });
 
   return (
-    <main className="mx-auto max-w-lg">
-      hello
-      <div className="mt-7">
-        {posts.map((post) => {
-          return (
-            <div key={post.slug}>
-              <Mdx code={post.body.code} />
-            </div>
-          );
-        })}
+    <main className="mx-auto max-w-2xl">
+      <div className="pt-28">
+        <Navigation posts={posts} />
       </div>
     </main>
   );

@@ -1,0 +1,101 @@
+"use client";
+
+import React from "react";
+import Fuse from "fuse.js";
+import { Command } from "cmdk";
+import { type Post } from "contentlayer/generated";
+
+import "~/styles/navigation.scss";
+import { useRouter } from "next/navigation";
+import { monthNames } from "~/lib/utils";
+
+const fuseOptions = {
+  isCaseSensitive: false,
+  includeScore: true,
+  shouldSort: true,
+  // includeMatches: false,
+  // findAllMatches: false,
+  // minMatchCharLength: 1,
+  // location: 0,
+  threshold: 0.5,
+  // distance: 100,
+  // useExtendedSearch: false,
+  // ignoreLocation: false,
+  // ignoreFieldNorm: false,
+  // fieldNormWeight: 1,
+  keys: ["title"],
+};
+
+type Props = {
+  posts: Post[];
+};
+
+export default function Navigation({ posts }: Props) {
+  const [searchValue, setSearchValue] = React.useState("");
+  const [filteredItems, setFilteredItems] = React.useState<Post[]>(posts);
+
+  const router = useRouter();
+
+  const fuse = new Fuse(posts, fuseOptions);
+
+  React.useEffect(() => {
+    const results = fuse.search(searchValue);
+    console.log("🚀 ~ React.useEffect ~ results:", results);
+    const formattedResults = results
+      //   .sort((a, b) => (a.score ?? 1) - (b.score ?? 0))
+      .map((r) => r.item);
+    //   console.log("🚀 ~ React.useEffect ~ formattedResults:", formattedResults)
+
+    if (!!!formattedResults.length && !searchValue) {
+      setFilteredItems(posts);
+    } else {
+      setFilteredItems(formattedResults);
+    }
+  }, [searchValue]);
+
+  return (
+    <div>
+      <Command
+        label="Command Menu"
+        // filter={(value, search) => {
+        //   if (value.includes(search)) return 1;
+        //   return 0;
+        // }}
+        shouldFilter={false}
+      >
+        <Command.Input
+          placeholder="Search..."
+          className="flex h-10 w-full rounded-sm border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 disabled:cursor-not-allowed disabled:opacity-50"
+          value={searchValue}
+          onValueChange={setSearchValue}
+          autoFocus
+        />
+        <div className="mt-6 flex justify-between border-b pb-2 text-sm text-secondary-foreground/60">
+          <p>Title</p>
+          <p>Created at</p>
+        </div>
+        <Command.List className="mt-4">
+          {/* <Command.Empty>No results found.</Command.Empty> */}
+          {/* {!!!filteredItems.length && <div>no items in the list</div>} */}
+          {filteredItems.map((post, i) => {
+            return (
+              <Command.Item
+                className="rounded-md text-[15px]"
+                key={`post-item-${post._id}-${i}`}
+                onSelect={() => router.push(`/p/${post.slug}`)}
+              >
+                <div className="flex px-3.5 py-2.5 text-secondary-foreground">
+                  <div>{post.title}</div>
+                  <div className="ml-auto">
+                    {new Date(post.date).getDate()}{" "}
+                    {monthNames[new Date(post.date).getMonth()]}
+                  </div>
+                </div>
+              </Command.Item>
+            );
+          })}
+        </Command.List>
+      </Command>
+    </div>
+  );
+}
