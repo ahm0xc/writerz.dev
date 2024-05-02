@@ -16,7 +16,7 @@ export default function PostsPage({ params }: Props) {
 
   return (
     <div>
-      <div className="mx-auto max-w-2xl pt-20">
+      <div className="mx-auto max-w-2xl pt-20 pb-20">
         <div aria-label="heading" className="">
           <h1 className="text-2xl font-semibold">{post.title}</h1>
           <p className="mt-2 text-sm text-secondary-foreground/70">

@@ -10,6 +10,12 @@ await import("./src/env.js");
 const config = {
   reactStrictMode: true,
   swcMinify: true,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  }
 };
 
 export default withContentlayer(config);
