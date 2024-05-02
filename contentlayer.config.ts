@@ -151,7 +151,7 @@ export default makeSource({
         // @ts-expect-error untyped
         rehypePrettyCode,
         {
-          theme: "github-dark",
+          theme: "one-dark-pro",
           onVisitLine(node: { children: string | unknown[] }) {
             // Prevent lines from collapsing in `display: grid` mode, and allow empty
             // lines to be copy/pasted

@@ -82,7 +82,7 @@ export default function Navigation({ posts }: Props) {
               <Command.Item
                 className="rounded-md text-[15px]"
                 key={`post-item-${post._id}-${i}`}
-                onSelect={() => router.push(`/p/${post.slug}`)}
+                onSelect={() => router.push(`/p/${post.slugAsParams}`)}
               >
                 <div className="flex px-3.5 py-2.5 text-secondary-foreground">
                   <div>{post.title}</div>

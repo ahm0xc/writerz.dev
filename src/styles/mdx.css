@@ -1,3 +1,6 @@
+[data-rehype-pretty-code-fragment] pre {
+  @apply bg-secondary/10
+}
 [data-rehype-pretty-code-fragment] code {
     @apply grid min-w-full break-words rounded-none !border-none bg-transparent p-0 text-sm text-black;
     counter-reset: line;
