@@ -5,13 +5,30 @@ import { Mdx } from "~/components/mdx-components";
 import BackButton from "./_components/back-button";
 
 import "~/styles/mdx.css";
+import { Metadata } from "next";
+
+function getPost(slug: string) {
+  return allPosts.find((p) => p.slugAsParams === slug);
+}
 
 type Props = {
   params: { slug: string };
 };
 
+export async function generateMetadata(
+  { params }: Props,
+  // parent: ResolvingMetadata
+): Promise<Metadata> {
+  const post = getPost(params.slug);
+
+  return {
+    title: post?.title,
+    description: post?.description,
+  };
+}
+
 export default function PostsPage({ params }: Props) {
-  const post = allPosts.find((p) => p.slugAsParams === params.slug);
+  const post = getPost(params.slug);
   if (!post) return notFound();
 
   return (
