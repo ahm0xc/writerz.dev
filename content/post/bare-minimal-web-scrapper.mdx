@@ -1,0 +1,42 @@
+---
+title: Bare minimal web scapper with nodejs
+description: Bare minimal web scapper with nodejs
+date: 05-03-2024
+published: true
+---
+
+We will be creating a small web scrapper with the native fetch and just one package. We will make a application that will scrap the downloads for a npm package in nodejs.
+
+At first we have to fetch all the html for a page.
+```js
+const res = await fetch("https://www.npmjs.com/package/lodash");
+const html = await res.text();
+```
+
+Now we will use `jsdom` package to manage all the html.
+```bash
+pnpm add jsdom
+```
+
+```js
+const dom = new JSDOM(html);
+const document = dom.window.document
+const downloads = document.querySelector("._9ba9a726").textContent
+
+console.log("🚀 ~ downloads:", downloads)
+```
+
+The full code is bellow...
+```js
+import { JSDOM } from "jsdom";
+
+const res = await fetch("https://www.npmjs.com/package/lodash");
+const html = await res.text();
+
+const dom = new JSDOM(html);
+const document = dom.window.document
+
+const downloads = document.querySelector("._9ba9a726").textContent
+
+console.log("🚀 ~ downloads:", downloads)
+```
