@@ -8,6 +8,8 @@ import { type Post } from "contentlayer/generated";
 import "~/styles/navigation.scss";
 import { useRouter } from "next/navigation";
 import { monthNames } from "~/lib/utils";
+import { useHotkeys } from "react-hotkeys-hook";
+import { CommandIcon } from "lucide-react";
 
 const fuseOptions = {
   isCaseSensitive: false,
@@ -33,6 +35,9 @@ type Props = {
 export default function Navigation({ posts }: Props) {
   const [searchValue, setSearchValue] = React.useState("");
   const [filteredItems, setFilteredItems] = React.useState<Post[]>(posts);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  useHotkeys("meta+/", () => inputRef.current?.focus());
 
   const router = useRouter();
 
@@ -40,11 +45,7 @@ export default function Navigation({ posts }: Props) {
 
   React.useEffect(() => {
     const results = fuse.search(searchValue);
-    console.log("🚀 ~ React.useEffect ~ results:", results);
-    const formattedResults = results
-      //   .sort((a, b) => (a.score ?? 1) - (b.score ?? 0))
-      .map((r) => r.item);
-    //   console.log("🚀 ~ React.useEffect ~ formattedResults:", formattedResults)
+    const formattedResults = results.map((r) => r.item);
 
     if (!!!formattedResults.length && !searchValue) {
       setFilteredItems(posts);
@@ -63,13 +64,24 @@ export default function Navigation({ posts }: Props) {
         // }}
         shouldFilter={false}
       >
-        <Command.Input
-          placeholder="Search..."
-          className="flex h-10 w-full rounded-sm border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 disabled:cursor-not-allowed disabled:opacity-50"
-          value={searchValue}
-          onValueChange={setSearchValue}
-          autoFocus
-        />
+        <div className="relative">
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
+            <span className="flex h-5 w-5 items-center justify-center rounded bg-secondary text-xs text-neutral-700 dark:text-neutral-400">
+              <CommandIcon size={10} />
+            </span>
+            <span className="flex h-5 w-5 items-center justify-center rounded bg-secondary text-xs text-neutral-700 dark:text-neutral-400">
+              /
+            </span>
+          </div>
+          <Command.Input
+            ref={inputRef}
+            placeholder="Search..."
+            className="flex h-10 w-full rounded-sm border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 disabled:cursor-not-allowed disabled:opacity-50 pr-16"
+            value={searchValue}
+            onValueChange={setSearchValue}
+            autoFocus
+          />
+        </div>
         <div className="mt-6 flex justify-between border-b pb-2 text-sm text-secondary-foreground/60">
           <p>Title</p>
           <p>Created at</p>
