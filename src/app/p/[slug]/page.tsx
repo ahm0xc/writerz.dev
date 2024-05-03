@@ -15,6 +15,12 @@ type Props = {
   params: { slug: string };
 };
 
+export async function generateStaticParams() {
+  return allPosts.map((post) => ({
+    slug: post.slugAsParams,
+  }));
+}
+
 export async function generateMetadata(
   { params }: Props,
   // parent: ResolvingMetadata
