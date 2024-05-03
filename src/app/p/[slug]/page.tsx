@@ -1,10 +1,10 @@
 import { allPosts } from "contentlayer/generated";
 import { notFound } from "next/navigation";
-import React from "react";
 
 import { Mdx } from "~/components/mdx-components";
+import BackButton from "./_components/back-button";
 
-import "~/styles/mdx.css"
+import "~/styles/mdx.css";
 
 type Props = {
   params: { slug: string };
@@ -16,7 +16,10 @@ export default function PostsPage({ params }: Props) {
 
   return (
     <div>
-      <div className="mx-auto max-w-2xl pt-20 pb-20">
+      <div className="mx-auto max-w-2xl pb-20 pt-20">
+        <div className="mb-4">
+          <BackButton />
+        </div>
         <div aria-label="heading" className="">
           <h1 className="text-2xl font-semibold">{post.title}</h1>
           <p className="mt-2 text-sm text-secondary-foreground/70">
