@@ -18,7 +18,7 @@ export const metadata = {
     template: "%s | Writerz"
   },
   description: "Writerz",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  // icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
 export default function RootLayout({
