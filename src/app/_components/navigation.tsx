@@ -98,7 +98,7 @@ export default function Navigation({ posts }: Props) {
               >
                 <div className="flex px-3.5 py-2.5 text-secondary-foreground">
                   <div>{post.title}</div>
-                  <div className="ml-auto">
+                  <div className="ml-auto text-secondary-foreground/60">
                     {new Date(post.date).getDate()}{" "}
                     {monthNames[new Date(post.date).getMonth()]}
                   </div>
