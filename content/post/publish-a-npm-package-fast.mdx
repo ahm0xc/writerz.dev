@@ -1,0 +1,199 @@
+---
+title: "Publish a npm package blazing fast"
+description: ""
+date: 05-03-2024
+published: true
+tags:
+    - npm package
+    - create a npm package
+---
+
+## Basic setup
+
+First let's create a `package.json` file in the root of the project. Then paste the following.
+```json title="package.json"
+{
+  "name": "test_npm_package",
+  "version": "1.0.0",
+  "license": "MIT"
+}
+```
+
+Then we will create an entry point file `index.ts`. Now let's install `typescript` as a dev dependency by running.
+```bash
+npm i --save-dev typescript
+```
+
+After that done we have to initialize our project for typescript.
+```bash
+npx tsc --init
+```
+
+It will create a `tsconfig.json` file in the root of the project with alot of configuration options. We will only use these options for now.
+```json
+{
+  "compilerOptions": {
+    "target": "es2016" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
+    "module": "commonjs" /* Specify what module code is generated. */,
+    "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
+    "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
+    "strict": true /* Enable all strict type-checking options. */,
+    "skipLibCheck": true /* Skip type checking all .d.ts files. */,
+    "noUncheckedIndexedAccess": true,
+    "noEmit": true
+  }
+}
+```
+
+Now we will add `tsup` to our project it bundles up our typescript project and converts the ts files into js files.
+```bash
+npm i --save-dev tsup
+```
+
+Then we have to add a build script to our `package.json`.
+```json title="package.json"
+{
+  ...
+  "scripts": {
+    "build": "tsup index.ts --format cjs,esm --dts"
+  }
+  ...
+}
+```
+
+Now if we run `npm run build` we will endup with a dist folde with all of out type files and js files.
+
+Now we have to add some more properties to our `package.json` file.
+```json title="package.json"
+{
+  ...
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts"
+  ...
+}
+```
+
+To be more secure we will also add a list script.
+```json title="package.json"
+{
+  ...
+  "scripts": {
+    "lint": "tsc"
+  },
+  ...
+}
+```
+
+## Initialize github
+
+```bash
+git init
+```
+
+```bash
+touch .gitignore
+```
+```gitignore title=".gitignore"
+node_modules
+dist
+```
+```bash
+git add .
+```
+```bash
+git commit -m "init"
+```
+
+Then push the changes to remote repo.
+
+## Setup Changesets
+
+Changesets take out all of the pain of versioning our package.
+
+```bash
+npm i --save-dev @changesets/cli
+```
+
+Then run
+```bash
+npx changeset init
+```
+
+Now every time you change anything it requires a changeset which is a markdown file that will describe what changes are you making.
+Now if you run `npx changeset` you will see following options.
+```bash
+🦋  What kind of change is this for test_npm_package? (current version is 0.0.1) … 
+❯ patch
+  minor
+  major
+```
+
+## Setup CI
+
+It's really pain to manually rebuild and deploy all our work. So we will setup a github workflow that will do this for us.
+
+For that create a file in `.github/workflows/main.yml` and paste the following.
+```yml title="main.yml"
+name: CI
+on:
+  push:
+    branches:
+      - "**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run lint && pnpm run build
+```
+
+And also create a `publish.yml` in the same directory.
+```yml title="publish.yml"
+name: Publish
+on:
+  workflow_run:
+    workflows: [CI]
+    branches: [main]
+    types: [completed]
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  publish:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: pnpm run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+```
