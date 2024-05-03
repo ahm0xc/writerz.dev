@@ -23,7 +23,7 @@ const fuseOptions = {
   // ignoreLocation: false,
   // ignoreFieldNorm: false,
   // fieldNormWeight: 1,
-  keys: ["title"],
+  keys: ["title", "tags"],
 };
 
 type Props = {
