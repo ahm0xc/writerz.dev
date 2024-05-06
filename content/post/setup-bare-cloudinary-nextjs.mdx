@@ -1,0 +1,154 @@
+---
+title: Setup Cloudinary in Nextjs
+description: Setup Cloudinary in Nextjs
+published: true
+date: 05-06-2024
+tags:
+    - nextjs cloudinary
+---
+
+### Introduction to [`next-cloudinary`](https://next.cloudinary.dev/)
+
+`next-cloudinary` is a High-performance image and video delivery and uploading at scale in Next.js powered by [Cloudinary](https://cloudinary.com/).
+
+## Setup Cloudinary
+
+First make sure you have a account in [cloudinary](https://cloudinary.com/)
+
+### Setting up environment variables
+And after initialization of a nextjs 14 project we can start by adding all the env variables.
+
+```sh
+NEXT_PUBLIC_CLOUDINARY_API_KEY="" // your cloudinary api key
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="" // cloud name
+CLOUDINARY_API_SECRET="" // your cloudinary api secret
+```
+
+You can find your api keys on `settings>access keys`.
+
+![get cloudinary keys](https://res.cloudinary.com/dlxh4tr/image/upload/f_auto,q_50/v1/writerz/x8pramwswhaxwbltqtnq)
+
+> The env variables with a prefix of `NEXT_PUBLIC_` are considered adding on the client js bundle that is delivered to the clients browser.
+
+`next-cloudinary` will automatically fetch those env variables.
+
+## Simple upload util
+
+We will use the cloudinary api here to upload the images although you can upload images with the `cloudinary` package also.
+
+```ts title="lib/cloudinary.ts"
+export async function uploadImage({ file }: { file: File }) {
+  const formData = new FormData()
+  formData.append("file", file)
+  formData.append("upload_preset", "social_media")
+
+  try {
+    const data = (await fetch(
+      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    ).then((r) => r.json())) as CloudinaryResponseType
+
+    return { data }
+  } catch (error) {
+    return { error }
+  }
+}
+```
+```ts title="types/cloudinary.d.ts"
+export type CloudinaryResponseType = {
+  asset_id: string
+  bytes: number
+  created_at: string
+  etag: string
+  folder: string
+  format: string
+  height: number
+  width: number
+  original_filename: string
+  placeholder: boolean
+  public_id: string
+  resource_type: string
+  secure_url: string
+  signature: string
+  tags: string[]
+  type: string
+  url: string
+  version: number
+  version_id: string
+}
+```
+
+Notice that we have only setup the upload functionality so now let's look at how we can connect it from our frontend.
+
+### Frontend
+
+Code...
+
+```tsx title="page.tsx"
+"use client"
+import * as React from "react"
+export default function UploadPage({}: Props) {
+  const [fileToUpload, setFileToUpload] = React.useState<File>([])
+  async function handleSubmit(ev: React.FormEvent) {
+    ev.preventDefault()
+    const { data } = await uploadImage({ file: fileToUpload })
+    console.log("🚀 ~ handleSubmit ~ data:", data)
+  }
+  function handleChange(ev:React.FormEvent<HTMLInputElement>) {
+     const target = e.target as HTMLInputElement & { files: FileList };
+     setFileToUpload(target?.files[0])
+  }
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input type="file" onChange={handleChange} />
+        <button type="submit">Upload</button>
+      </form>
+    </div>
+  )
+}
+```
+
+Yes that's it if you open up the console on your browser and then try to a image you will see a `console.log` of data object.
+
+You can stop here if you want but let's improve the frontend more.
+
+### Additional features
+
+We can add a small preview of image we are uploading with the file reader utility. Then the code will look like this.
+
+```tsx title="page.tsx" {18-23}
+"use client"
+import * as React from "react"
+export default function UploadPage({}: Props) {
+  const [fileToUpload, setFileToUpload] = React.useState<File>([])
+  async function handleSubmit(ev: React.FormEvent) {
+    ev.preventDefault()
+    const { data } = await uploadImage({ file: fileToUpload })
+    console.log("🚀 ~ handleSubmit ~ data:", data)
+  }
+  function handleChange(ev:React.FormEvent<HTMLInputElement>) {
+     const target = e.target as HTMLInputElement & { files: FileList };
+     setFileToUpload(target?.files[0])
+  }
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        {fileToUpload && (
+          <img
+            src={URL.createObjectURL(new Blob([fileToUpload],{type:fileToUpload.type}))}
+            alt=""
+          />
+        )}
+        <input type="file" onChange={handleChange} />
+        <button type="submit">Upload</button>
+      </form>
+    </div>
+  )
+}
+```
