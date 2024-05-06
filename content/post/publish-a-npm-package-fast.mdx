@@ -20,12 +20,12 @@ First let's create a `package.json` file in the root of the project. Then paste 
 ```
 
 Then we will create an entry point file `index.ts`. Now let's install `typescript` as a dev dependency by running.
-```bash
+```sh
 npm i --save-dev typescript
 ```
 
 After that done we have to initialize our project for typescript.
-```bash
+```sh
 npx tsc --init
 ```
 
@@ -46,7 +46,7 @@ It will create a `tsconfig.json` file in the root of the project with alot of co
 ```
 
 Now we will add `tsup` to our project it bundles up our typescript project and converts the ts files into js files.
-```bash
+```sh
 npm i --save-dev tsup
 ```
 
@@ -87,21 +87,21 @@ To be more secure we will also add a list script.
 
 ## Initialize github
 
-```bash
+```sh
 git init
 ```
 
-```bash
+```sh
 touch .gitignore
 ```
 ```gitignore title=".gitignore"
 node_modules
 dist
 ```
-```bash
+```sh
 git add .
 ```
-```bash
+```sh
 git commit -m "init"
 ```
 
@@ -111,18 +111,18 @@ Then push the changes to remote repo.
 
 Changesets take out all of the pain of versioning our package.
 
-```bash
+```sh
 npm i --save-dev @changesets/cli
 ```
 
 Then run
-```bash
+```sh
 npx changeset init
 ```
 
 Now every time you change anything it requires a changeset which is a markdown file that will describe what changes are you making.
 Now if you run `npx changeset` you will see following options.
-```bash
+```sh
 🦋  What kind of change is this for test_npm_package? (current version is 0.0.1) … 
 ❯ patch
   minor
