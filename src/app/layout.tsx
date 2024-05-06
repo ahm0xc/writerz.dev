@@ -1,6 +1,7 @@
 import "~/styles/globals.css";
 
 import { Roboto as FontSans } from "next/font/google";
+import LogLib from "@loglib/tracker/react";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import { cn } from "~/lib/utils";
@@ -15,7 +16,7 @@ const sans = FontSans({
 export const metadata = {
   title: {
     default: "Writerz",
-    template: "%s | Writerz"
+    template: "%s | Writerz",
   },
   description: "Writerz",
   // icons: [{ rel: "icon", url: "/favicon.ico" }],
@@ -30,10 +31,15 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "bg-background min-h-screen font-sans antialiased",
+          "min-h-screen bg-background font-sans antialiased",
           sans.variable,
         )}
       >
+        <LogLib
+          config={{
+            id: "writerz",
+          }}
+        />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
