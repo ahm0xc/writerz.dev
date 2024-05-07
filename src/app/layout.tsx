@@ -46,7 +46,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <TRPCReactProvider>{children}</TRPCReactProvider>
+          <TRPCReactProvider>
+            <div className="min-h-screen">{children}</div>
+          </TRPCReactProvider>
         </ThemeProvider>
       </body>
     </html>

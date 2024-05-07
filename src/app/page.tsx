@@ -1,8 +1,10 @@
 import { type Post, allPosts } from "contentlayer/generated";
 import { compareDesc } from "date-fns";
 
-import "~/styles/mdx.css";
+import Footer from "~/components/footer";
 import Navigation from "./_components/navigation";
+
+import "~/styles/mdx.css";
 
 export default async function Home() {
   const posts = allPosts
@@ -22,9 +24,12 @@ export default async function Home() {
     });
 
   return (
-    <main className="mx-auto max-w-2xl">
-      <div className="pt-28">
+    <main className="h-screen flex flex-col px-4">
+      <div className="pt-28 mx-auto max-w-2xl w-full">
         <Navigation posts={posts as Post[]} />
+      </div>
+      <div className="mt-auto pb-8">
+        <Footer />
       </div>
     </main>
   );
