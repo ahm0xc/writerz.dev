@@ -1,0 +1,53 @@
+---
+title: Creating a metallic effect with CSS
+description: Creating a metallic effect with CSS
+date: 06-08-2024
+published: true
+---
+
+import MetallicButton from "~/components/demo/metallic-button";
+
+We are gonna build something that look like from the past, kind of old school. But as we know everything old is new again, so let's see how to create a metallic effect with CSS.
+
+### Demo
+<br />
+<MetallicButton />
+
+### Code
+
+For what we have below, the code is pretty simple. We have a button with a gradient background.
+
+```html
+<button class="metallic-button">Download</button>
+```
+```css
+.metallic-button {
+  font-size: 14px;
+  padding: 6px 16px;
+  font-weight: 400;
+  border: none;
+  outline: none;
+  color: #000;
+  background: linear-gradient(
+    45deg,
+    #999 5%,
+    #fff 10%,
+    #ccc 30%,
+    #ddd 50%,
+    #ccc 70%,
+    #fff 80%,
+    #999 95%
+  );
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.metallic-button:hover {
+  transform: translateY(-2px);
+}
+```
+
+The trick here is to use a gradient background with a lot of stops. The gradient is made of 7 colors, 3 dark and 3 light, and one in the middle that is the same as the background. The gradient is at 45deg, so the light colors are on the top left and the dark ones on the bottom right.
