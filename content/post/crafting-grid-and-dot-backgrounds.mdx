@@ -1,0 +1,114 @@
+---
+title: Crafting grid and dot backgrounds with CSS and Tailwind CSS
+description: Crafting grid and dot backgrounds with CSS and Tailwind CSS
+date: 06-08-2024
+published: true
+---
+
+import GridBackground from "~/components/demo/grid-background"
+import DotBackground from "~/components/demo/dot-background"
+import MaskedDotBackground from "~/components/demo/masked-dot-background"
+
+There is a cool website called [bg.ibelick.com](https://bg.ibelick.com/) that has some cool & modern backrounds.
+
+Today I want to explain two techniques used in this projects: how to create a grid and a dot background with CSS and Tailwind CSS. I like the idea of building it with CSS so that it can be easily customized and used in different projects.
+
+### Grid background
+
+<br />
+<GridBackground />
+
+For Tailwind CSS the code look like:
+```html
+<div
+  class="absolute inset-0 h-full w-full bg-white bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"
+></div>
+```
+
+And for css
+```css
+.grid {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  background-image: linear-gradient(to right, #80808012 1px, transparent 1px),
+    linear-gradient(to bottom, #80808012 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+```
+
+The idea behind the magic:
+
+- We create two linear gradients, one for the horizontal lines and one for the vertical lines. We use the same color for the lines and the background so that the lines are transparent.
+- We repeat the gradient every 24px.
+
+And that's it! We have a grid background.
+
+### Dot background
+
+<br />
+<DotBackground />
+
+For Tailwind CSS the code look like:
+```html
+<div
+  class="absolute inset-0 h-full w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]"
+></div>
+```
+
+And for the CSS:
+```css
+.dot {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+```
+
+The dot background is kind of the same logic as the grid background. We use a radial gradient to create an infinite grid of dots.
+
+### Bonus: Masked
+
+<br />
+<MaskedDotBackground />
+
+Some time we don't want the background to be infinite. So we can use a mask to hide the part we don't want to see.
+
+For Tailwind CSS the code look like:
+```html
+<div
+  class="absolute inset-0 h-full w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_60%,transparent_100%)]"
+></div>
+```
+
+And for the CSS:
+```css
+.dot-mask {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+  background-size: 16px 16px;
+  -webkit-mask-image: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    #000 60%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    #000 60%,
+    transparent 100%
+  );
+}
+```
+
+Mask can be very useful to hide part of an element and create interesting effects. The idea here is to use a radial gradient as a mask to hide the part of the background we don't want to see. You can play with the gradient to create different effects!
+
+### Conclusion
+
+I hope you enjoyed this article and that you learned something new. I think it's a cool way to make a background without using an image. You can do a lot of cool stuff with this, like create a gradient on top of the grid or dot background.
