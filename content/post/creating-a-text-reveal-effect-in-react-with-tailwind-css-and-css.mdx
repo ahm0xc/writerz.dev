@@ -1,0 +1,112 @@
+---
+title: Creating a text reveal effect in React with Tailwind CSS and Vanilla CSS
+description: Creating a text reveal effect in React with Tailwind CSS and Vanilla CSS
+date: 06-08-2024
+published: true
+---
+
+import TextRevealAnimation from "~/components/demo/text-reveal-animation";
+
+The way text appears on your website can greatly influence user engagement and overall aesthetic appeal. I want to explore a simple text reveal animation that can be used to add a bit of flair to your website. Let's dive into a simple, cool, text reveal animation.
+<br />
+<TextRevealAnimation />
+
+### Vanilla CSS
+
+```jsx
+const TextRevealCSS = () => {
+  const text = "Text Reveal Animation 💫";
+
+  return (
+    <h1>
+      {text.match(/./gu)!.map((char, index) => (
+        <span
+          key={`${char}-${index}`}
+          style={{ animationDelay: `${index * 0.05}s` }}
+        >
+          {char === " " ? "\u00A0" : char}
+        </span>
+      ))}
+    </h1>
+  );
+};
+```
+```css
+h1 {
+  overflow: hidden;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: white;
+}
+
+span {
+  display: inline-block;
+  animation: reveal 1.5s cubic-bezier(0.77, 0, 0.175, 1) 0.5s;
+  animation-fill-mode: backwards;
+}
+
+@keyframes reveal {
+  0% {
+    transform: translate(0, 100%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+```
+
+### Tailwind CSS
+
+```jsx
+export const TextRevealTW = () => {
+  const text = "Text Reveal Animation 💫";
+
+  return (
+    <>
+      <h1 className="overflow-hidden text-2xl font-bold leading-6 text-white">
+        {text.match(/./gu)!.map((char, index) => (
+          <span
+            className="animate-text-reveal inline-block [animation-fill-mode:backwards]"
+            key={`${char}-${index}`}
+            style={{ animationDelay: `${index * 0.05}s` }}
+          >
+            {char === " " ? "\u00A0" : char}
+          </span>
+        ))}
+      </h1>
+    </>
+  );
+};
+```
+```js title="tailwind.config.js"
+module.exports = {
+  theme: {
+    extend: {
+      animation: {
+        "text-reveal": "text-reveal 1.5s cubic-bezier(0.77, 0, 0.175, 1) 0.5s",
+      },
+      keyframes: {
+        "text-reveal": {
+          "0%": {
+            transform: "translate(0, 100%)",
+          },
+          "100%": {
+            transform: "translate(0, 0)",
+          },
+        },
+      },
+    },
+  },
+};
+```
+
+### Code breakdown
+Here is the code breakdown:
+
+- The `<h1>` tag contains the text to be animated. The string from the text variable is broken down into an array of characters with `text.match(/./gu)`. It splits the string into an array of Unicode grapheme clusters (which includes emojis too). Each character is then mapped to a `<span>` element. This allows each letter to have its own animation.
+- Animation Delay: For each `<span>` element (each character of the text), the style attribute `animationDelay` is applied. This causes each character to animate at slightly different times, creating a cascading effect. The delay for each character is determined by its index in the array, multiplied by 0.05 seconds.
+- White Space Handling: When mapping each character to a `<span>`, we replace any whitespace characters with a non-breaking space ("\u00A0") to preserve spaces in the output.
+- CSS Styles: The h1 rule sets the text styling. Each span is displayed inline-block (meaning they line up horizontally), and the animation is applied to it.
+- The `@keyframes` reveal defines the animation. At the start (0%), each character is translated 100% down along the Y-axis (which moves it out of view if the overflow is hidden). By the end of the animation (100%), it is back to its original position (Y translation is 0).
+- The animation-fill-mode: backwards rule ensures that the elements are in their starting positions before the animation begins.

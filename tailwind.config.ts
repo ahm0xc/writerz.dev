@@ -78,11 +78,20 @@ const config = {
           "45%": { transform: "translateY(-100%)", opacity: "1" },
           "100%": { transform: "translateY(-100%)", opacity: "0.1" },
         },
+        "text-reveal": {
+          "0%": {
+            transform: "translate(0, 120%)",
+          },
+          "100%": {
+            transform: "translate(0, 0)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         slide: "slide 2.5s linear infinite",
+        "text-reveal": "text-reveal 1.5s cubic-bezier(0.77, 0, 0.175, 1) 0.5s",
       },
     },
   },
