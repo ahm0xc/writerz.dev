@@ -1,0 +1,144 @@
+---
+title: Creating a text sliding effect with Tailwind CSS and Vanilla CSS
+description: Creating a text sliding effect with Tailwind CSS and Vanilla CSS
+date: 06-08-2024
+published: true
+---
+
+import TextSlidingEffect from "~/components/demo/text-sliding-effect";
+
+This time we are going to create a text slide effect. The idea is to have a text that slides in from the bottom to the top. The sliding text will be a sequence of words that change one after the other. I will show you how to create this effect using Tailwind CSS and vanilla CSS. Here is a demo of what we will be creating:
+<br />
+<TextSlidingEffect />
+
+
+### Vanilla CSS
+
+The code below shows how to create the sliding text effect using vanilla CSS:
+```html
+<h1>
+  Dive Into
+  <span className="slider">
+    <span className="slider__word">Ideas</span>
+    <span className="slider__word">Tech</span>
+    <span className="slider__word">Art</span>
+  </span>
+</h1>
+```
+```css
+h1 {
+  font-size: 3rem;
+  display: flex;
+  align-items: center;
+  color: #a3a3a3;
+  font-weight: 500;
+}
+
+.slider {
+  position: relative;
+  height: 1em;
+  width: 150px;
+  overflow: hidden;
+  margin-left: 12px;
+}
+
+.slider__word {
+  font-weight: 500;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  line-height: 1em;
+  transform: translateY(100%);
+  animation: slide 2.5s linear infinite;
+  color: #f5f5f5;
+}
+
+.slider__word:nth-child(2) {
+  animation-delay: 0.83s;
+}
+
+.slider__word:nth-child(3) {
+  animation-delay: 1.67s;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateY(100%);
+    opacity: 0.1;
+  }
+  15% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  30% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  45% {
+    transform: translateY(-100%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%);
+    opacity: 0.1;
+  }
+}
+```
+
+Here is the code breakdown:
+
+- The `h1` selector styles the "Dive into" text. The display property is set to `flex` to allow the elements within it to sit in a row.
+- The `.slider` class is the container for the sliding words. It is set to relative position which acts as the reference point for the absolutely positioned child elements (sliding words). The `overflow` is set to `hidden` to hide the parts of the sliding words that are outside this container. We add a `margin-left` to the container to create some space between the "Dive into" text and the sliding words (and simulate a space between the words).
+- The `.slider__word` class applies to the individual words that are sliding. Each word is absolutely positioned within the slider container. The transform: `translateY(100%);` means each word starts from below the visible area of the slider container. We use the `animation` property to set the name, duration, timing function and iteration count.
+- The `:nth-child(2)` and `:nth-child(3)` selectors apply to the second and third word respectively. They each have an animation-delay to ensure the words do not all start animating at the same time. The specific timing of 0.83s and 1.67s for the `animation-delay` is to divide the total animation duration of 2.5s into three equal intervals, providing a smooth transition between each word in the sequence. This way, when one word finishes its animation, the next one is ready to start, creating a continuous, seamless animation.
+- The `@keyframes` slide rule defines the animation. It specifies the styles at different stages (0%, 15%, 30%, 45%, 100%) of one cycle of the animation. The `transform: translateY();` is used to move the words vertically and opacity is used to fade them in and out.
+
+### Tailwind CSS
+
+If you prefer Tailwind CSS, here is the code:
+```html
+<h1 className="flex items-center text-6xl font-medium text-neutral-400">
+  Dive Into
+  <span className="relative ml-3 h-[1em] w-36 overflow-hidden">
+    <span
+      className="absolute h-full w-full -translate-y-full animate-slide leading-none text-white"
+    >
+      Ideas
+    </span>
+    <span
+      className="absolute h-full w-full -translate-y-full animate-slide leading-none text-white [animation-delay:0.83s]"
+    >
+      Tech
+    </span>
+    <span
+      className="absolute h-full w-full -translate-y-full animate-slide leading-none text-white [animation-delay:1.83s]"
+    >
+      Art
+    </span>
+  </span>
+</h1>
+```
+```js title="tailwind.config.js"
+module.exports = {
+  theme: {
+    extend: {
+      animation: {
+        slide: "slide 2.5s linear infinite",
+      },
+      keyframes: {
+        slide: {
+          "0%": { transform: "translateY(100%)", opacity: 0.1 },
+          "15%": { transform: "translateY(0)", opacity: 1 },
+          "30%": { transform: "translateY(0)", opacity: 1 },
+          "45%": { transform: "translateY(-100%)", opacity: 1 },
+          "100%": { transform: "translateY(-100%)", opacity: 0.1 },
+        },
+      },
+    },
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
