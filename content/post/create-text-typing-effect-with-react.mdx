@@ -1,0 +1,110 @@
+---
+title: Create a text typing effect with React
+description: Create a text typing effect with React
+date: 06-08-2024
+published: true
+---
+
+import TypingEffect from "~/components/demo/typing-effect.tsx";
+
+The typing animation effect is a very popular effect on the web. It can be used to create a chat, a loading animation, or just to add a bit of dynamism to your website.
+
+Since OpenAI has released ChatGPT (already almost a year!), we can see this effect more than ever. For a project, I had to create a similar effect, and I thought it would be a good idea to share it with you.
+
+### The effect
+<br />
+<TypingEffect duration={50} isTypeByLetter />
+
+### The code
+
+For this effect, we will use a custom hook:
+
+```tsx title="hooks/use-typing-effect.tsx"
+import * as React from "react";
+
+const useTypingEffect = (
+  text: string,
+  duration: number,
+  isTypeByLetter = false,
+) => {
+  const [currentPosition, setCurrentPosition] = React.useState(0);
+  const items = isTypeByLetter ? text.split("") : text.split(" ");
+
+  React.useEffect(() => {
+    setCurrentPosition(0);
+  }, [text]);
+
+  React.useEffect(() => {
+    if (currentPosition >= items.length) return;
+
+    const intervalId = setInterval(() => {
+      setCurrentPosition((prevPosition) => prevPosition + 1);
+    }, duration);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [currentPosition, items, duration]);
+
+  return items.slice(0, currentPosition).join(isTypeByLetter ? "" : " ");
+};
+
+export default useTypingEffect;
+```
+
+We have 3 parameters: the text to display, the duration between each letter/word, and a boolean to know if we want to type by letter or by word (I use this in the next section).
+
+In our example below we use the hook like with a texts array, and we change the text every 5 seconds, like this:
+
+```tsx title="typing-effect.tsx"
+import React from "react";
+
+import useTypingEffect from "~/hooks/use-typing-effect";
+
+const texts = [
+  "This is a simple text typing effect in React",
+  "This effect is created using React Hooks",
+  "We can use this effect to create a typing effect for our portfolio",
+  "We can also use this effect to create a typing effect for our resume",
+  "or for your blog",
+  "or for your landing page",
+  "let's go",
+];
+
+type TextTypingEffectProps = {
+  isTypeByLetter?: boolean;
+  duration?: number;
+};
+
+const TextTypingEffectWithTexts: React.FC<TextTypingEffectProps> = ({
+  isTypeByLetter = false,
+  duration = 200,
+}) => {
+  const [textIndex, setTextIndex] = React.useState(0);
+  const textToShow = useTypingEffect(
+    texts[textIndex]!,
+    duration,
+    isTypeByLetter,
+  );
+
+  React.useEffect(() => {
+    const intervalId = setInterval(() => {
+      setTextIndex((prevIndex) =>
+        prevIndex >= texts.length - 1 ? 0 : prevIndex + 1,
+      );
+    }, 5000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  return (
+    <span className="text-black dark:text-white" key={textIndex}>
+      {textToShow}
+    </span>
+  );
+};
+
+export default TextTypingEffectWithTexts;
+```
