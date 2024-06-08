@@ -77,10 +77,10 @@ const components = {
     />
   ),
   ul: ({ className, ...props }) => (
-    <ul className={cn("my-6 ml-6 list-disc", className)} {...props} />
+    <ul className={cn("my-6 ml-6 list-disc text-primary/80", className)} {...props} />
   ),
   ol: ({ className, ...props }) => (
-    <ol className={cn("my-6 ml-6 list-decimal", className)} {...props} />
+    <ol className={cn("my-6 ml-6 list-decimal text-primary/80", className)} {...props} />
   ),
   li: ({ className, ...props }) => (
     <li className={cn("mt-2", className)} {...props} />
@@ -144,7 +144,7 @@ const components = {
   code: ({ className, ...props }) => (
     <code
       className={cn(
-        "relative max-h-[500px] overflow-y-auto rounded border px-[0.3rem] py-[0.2rem] font-mono text-sm",
+        "relative max-h-[500px] overflow-y-auto rounded border px-[0.3rem] py-[0.2rem] font-mono text-sm text-primary",
         className,
       )}
       {...props}

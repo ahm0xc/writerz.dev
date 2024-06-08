@@ -1,0 +1,88 @@
+---
+title: Creating an encrypted text effect with React
+description: Creating an encrypted text effect with React
+date: 06-08-2024
+published: true
+---
+
+import EncryptedTextEffect from "~/components/demo/encrypted-text-effect";
+
+In my series of posts about creating text effects with React, I've already covered `creating a text reveal` effect and `creating a text sliding` effect.
+
+In this post, I'll show you how to create this encrypted text effect:
+
+<br />
+<EncryptedTextEffect />
+
+Here is the code for the component:
+
+```tsx
+interface TextEncryptedProps {
+  text: string;
+  interval?: number;
+}
+
+const chars = "-_~`!@#$%^&*()+=[]{}|;:,.<>?";
+
+export const TextEncrypted: React.FC<TextEncryptedProps> = ({
+  text,
+  interval = 50,
+}) => {
+  const [outputText, setOutputText] = useState("");
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (outputText !== text) {
+      timer = setInterval(() => {
+        if (outputText.length < text.length) {
+          setOutputText((prev) => prev + text[prev.length]);
+        } else {
+          clearInterval(timer);
+        }
+      }, interval);
+    }
+
+    return () => clearInterval(timer);
+  }, [text, interval, outputText]);
+
+  const remainder =
+    outputText.length < text.length
+      ? text
+          .slice(outputText.length)
+          .split("")
+          .map(() => chars[Math.floor(Math.random() * chars.length)])
+          .join("")
+      : "";
+
+  if (!isMounted) {
+    return <span> </span>;
+  }
+
+  return (
+    <span className="text-white">
+      {outputText}
+      {remainder}
+    </span>
+  );
+};
+```
+
+And here is the code breakdown:
+
+- `<TextEncrypted />` receives two props, `text` and `interval`. The text prop is the text you want to obfuscate and then reveal. The interval prop is optional and defaults to 50. It sets the interval (in milliseconds) at which the obfuscated text is replaced by the original one.
+- `chars` is a string of symbols that will be used to generate the obfuscated text.
+- `outputText` stores the current state of the text displayed on the screen.
+- `isMounted` is used to track whether the component has mounted or not. It's set to true in a useEffect that runs once on component mount.
+- The first `useEffect` sets up an interval that continuously updates `outputText` by adding the next character from the original text. It checks if the `outputText` has reached the same length as the text and clears the interval if it has.
+- `remainder` is used to generate and store the obfuscated part of the text. It takes the part of the original text that hasn't been added to outputText yet, splits it into an array of characters, maps over it replacing every character with a random symbol from chars, and finally joins it back into a string.
+- In the render method, before the component is mounted, it simply renders a space. Once the component is mounted, it renders outputText followed by remainder. As `outputText` grows and remainder shrinks, it creates the visual effect of the text being decrypted.
+
+It is a simple effect, but it can be used to create some interesting designs, on a landing page title for example.
+
+Hope you like this post! See you! 👋
