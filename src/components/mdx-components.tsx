@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useMDXComponent } from "next-contentlayer/hooks";
 
 import { cn } from "~/lib/utils";
+import Link from "next/link";
 
 const components = {
   h1: ({ className, ...props }) => (
@@ -61,12 +62,19 @@ const components = {
       {...props}
     />
   ),
-  a: ({ className, ...props }) => (
-    <a
-      className={cn("font-medium underline underline-offset-4", className)}
-      {...props}
-    />
-  ),
+  a: ({ className, ...props }) => {
+    return (
+      // @ts-expect-error untyped
+      <Link
+        className={cn(
+          "font-semibold text-primary underline underline-offset-4",
+          className,
+        )}
+        target={"_blank"}
+        {...props}
+      />
+    );
+  },
   p: ({ className, ...props }) => (
     <p
       className={cn(
@@ -77,10 +85,16 @@ const components = {
     />
   ),
   ul: ({ className, ...props }) => (
-    <ul className={cn("my-6 ml-6 list-disc text-primary/80", className)} {...props} />
+    <ul
+      className={cn("my-6 ml-6 list-disc text-primary/80", className)}
+      {...props}
+    />
   ),
   ol: ({ className, ...props }) => (
-    <ol className={cn("my-6 ml-6 list-decimal text-primary/80", className)} {...props} />
+    <ol
+      className={cn("my-6 ml-6 list-decimal text-primary/80", className)}
+      {...props}
+    />
   ),
   li: ({ className, ...props }) => (
     <li className={cn("mt-2", className)} {...props} />

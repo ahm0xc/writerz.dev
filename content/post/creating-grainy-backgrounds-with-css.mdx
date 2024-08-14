@@ -1,0 +1,129 @@
+---
+title: Creating grainy backgrounds with CSS
+description: Creating grainy backgrounds with CSS
+date: 06-08-2024
+published: true
+---
+
+import Demo from "~/components/demo/grainy-card"
+
+<Demo />
+
+Hey there! Today, we're going to dive into a fun and simple way to add a bit of texture to your web designs - by creating grainy or noise backgrounds using CSS. This effect can add a subtle touch of depth and texture to your interfaces, making them stand out in a unique way. We'll be using SVGs, which means you can easily integrate this effect into any project.
+
+### Grainy Background
+
+Here is the final result we'll be creating and the difference without the grainy background. (You can view more example at the end of the article).
+
+---
+
+You can see the difference is subtle, but it adds a nice touch of depth to the card.
+
+#### How it works
+Here is the code:
+
+```jsx
+const CardGrainyBackground = () => {
+  return (
+    <div className="card">
+      <div className="card-content">
+        <span className="icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          />
+        </span>
+        <h3 className="title">Hello!</h3>
+        <p className="description">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit ex
+          obcaecati natus eligendi delectus, cum deleniti sunt in labore nihil
+          quod quibusdam expedita nemo.
+        </p>
+      </div>
+    </div>
+  );
+};
+```
+```css
+.card {
+  height: 100%;
+  width: 320px;
+  border-radius: 12px;
+  padding: 24px;
+  background: rgb(15 23 42);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+}
+
+.card-content {
+  position: relative;
+  z-index: 1;
+}
+
+.card:before {
+  content: "";
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 182px;
+  opacity: 0.12;
+  top: 0;
+  left: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.icon {
+  margin-bottom: 1rem;
+  display: inline-flex;
+}
+
+.icon > svg {
+  border-radius: 0.375rem;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  background: #2563eb;
+}
+
+.title {
+  font-size: 16px;
+  margin-bottom: 0.5rem;
+  color: #fff;
+}
+
+.description {
+  font-size: 14px;
+  color: rgb(148 163 184);
+}
+```
+
+Let's break it down.
+
+- The `:before` pseudo-element is used to create a layer on top of the .card element. This layer is filled with the SVG noise pattern that gives the grainy effect.
+
+- The `content: "";` line is necessary for the `:before` pseudo-element to work. It's set to an empty string because we don't want to add any actual content, we just want to create a new box in the document tree that we can style.
+
+- The `background-color: transparent;` line ensures that the background color of the pseudo-element doesn't block the view of the .card element behind it.
+
+- SVG Filters: The grainy effect is created using an SVG filter. SVG filters provide various graphical operations such as blurring, lighting, and color adjustments. In this case, the `feTurbulence` filter is used, which generates Perlin or fractal noise. This filter is applied to a rectangle that covers the entire SVG.
+
+Here is our svg:
+
+- Background Image: The SVG filter is then converted into a data URL and set as the background image of the card. This is done using the `background-image` CSS property. The url() function is used to include the SVG data URL. To convert the SVG filter into a data URL, you can use a tool like [SVG to Data URI](https://yoksel.github.io/url-encoder/).
+
+- Background Properties: The background-repeat property is set to repeat, which means the background image will be repeated to cover the entire card. The background-size property is set to 182px, which controls the size of the background image.
+
+- Opacity: The opacity property is set to 0.1, which makes the grainy effect subtle. You can increase or decrease the opacity to make the effect more or less prominent.
+
+- Positioning: The grainy effect is positioned absolutely with respect to the card. This is done using the position: absolute property. The top and left properties are set to 0, which positions the grainy effect at the top-left corner of the card.
+
+- Card Content: The card content is positioned relative to the card. This is done using the position: relative property. The z-index property is set to 1, which ensures that the card content is displayed above the grainy effect.
+
+The rest of the CSS is for styling the card and its content, including the icon, title, and description.
+
