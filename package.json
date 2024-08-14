@@ -9,7 +9,8 @@
     "db:push": "drizzle-kit push:pg",
     "db:studio": "drizzle-kit studio",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "clean": "rimraf .contentlayer .next"
   },
   "dependencies": {
     "@loglib/tracker": "^0.8.0",
@@ -69,6 +70,7 @@
     "rehype-slug": "^6.0.0",
     "remark": "^15.0.1",
     "remark-gfm": "^3.0.1",
+    "rimraf": "^6.0.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.4.2",
     "unist-util-visit": "4.1.2"

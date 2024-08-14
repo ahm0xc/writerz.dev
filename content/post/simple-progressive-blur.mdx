@@ -1,0 +1,42 @@
+---
+title: Simple progressive blur
+description: Simple progressive blur
+date: 08-14-2024
+published: true
+---
+
+import Demo from "~/components/demo/simple-progressive-blur"
+
+<Demo />
+
+
+
+
+In the world of web design, achieving an aesthetically pleasing and modern look is essential. One popular technique that has gained traction is the use of progressive blur effects. This effect can enhance the visual hierarchy of your webpage, allowing you to create depth and focus on specific elements. In this blog post, we&apos;ll explore how to create a progressive blur effect using CSS, specifically with the provided code snippet.
+
+### What is Progressive Blur?
+Progressive blur is a visual effect that gradually blurs an element, creating a smooth transition from sharpness to blurriness. This technique is particularly useful for overlaying text or images on backgrounds, allowing for better readability while still maintaining a sense of depth.
+
+### Understanding the Code
+Let&apos;s break down the provided CSS code to understand how it achieves the progressive blur effect:
+```css
+.div-positioned-over-element-that-should-blur {
+  -webkit-backdrop-filter: blur(40px);
+  backdrop-filter: blur(40px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black);
+  mask-image: linear-gradient(to bottom, transparent, black);
+}
+```
+
+### Key Properties Explained
+1. Backdrop Filter:
+    - `-webkit-backdrop-filter: blur(40px);`
+    - `backdrop-filter: blur(40px);`
+    - These properties apply a blur effect to the area behind the element. The 40px value indicates the intensity of the blur. The higher the number, the more pronounced the blur effect will be.
+2. Mask Image:
+    - `-webkit-mask-image: linear-gradient(to bottom, transparent, black);`
+    - `mask-image: linear-gradient(to bottom, transparent, black);`
+    - This property creates a gradient mask that transitions from transparent to opaque. This gradient allows the blur effect to appear progressively, enhancing the visual appeal of the overlay.
+
+### Conclusion
+Creating a progressive blur effect in CSS can significantly enhance the visual appeal of your web pages. By using the `backdrop-filter` and `mask-image` properties, you can achieve a modern and sophisticated look that draws attention to your content. Experiment with different values and styles to find the perfect balance for your design. Happy coding!
