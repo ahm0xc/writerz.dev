@@ -1,11 +1,12 @@
 import { allPosts } from "contentlayer/generated";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 
 import { Mdx } from "~/components/mdx-components";
 import BackButton from "./_components/back-button";
 
 import "~/styles/mdx.css";
-import { Metadata } from "next";
+import { env } from "~/env";
 
 function getPost(slug: string) {
   return allPosts.find((p) => p.slugAsParams === slug);
@@ -30,6 +31,16 @@ export async function generateMetadata(
   return {
     title: post?.title,
     description: post?.description,
+    openGraph: {
+      images: [
+        {
+          url: `${env.NEXT_PUBLIC_APP_URL}/og?title=${post?.title}`,
+          width: 1200,
+          height: 630,
+          alt: post?.title,
+        },
+      ],
+    },
   };
 }
 
