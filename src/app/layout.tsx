@@ -1,9 +1,7 @@
 import "~/styles/globals.css";
 
 import { Roboto as FontSans } from "next/font/google";
-import LogLib from "@loglib/tracker/react";
 
-import { TRPCReactProvider } from "~/trpc/react";
 import { cn } from "~/lib/utils";
 import { ThemeProvider } from "~/components/providers/theme-provider";
 
@@ -35,20 +33,13 @@ export default function RootLayout({
           sans.variable,
         )}
       >
-        <LogLib
-          config={{
-            id: "writerz",
-          }}
-        />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <TRPCReactProvider>
-            <div className="min-h-screen">{children}</div>
-          </TRPCReactProvider>
+          <div className="min-h-screen">{children}</div>
         </ThemeProvider>
       </body>
     </html>
