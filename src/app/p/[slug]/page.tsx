@@ -13,7 +13,7 @@ function getPost(slug: string) {
 }
 
 type Props = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 export async function generateStaticParams() {
@@ -22,10 +22,8 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata(
-  { params }: Props,
-  // parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
   const post = getPost(params.slug);
 
   return {
@@ -44,7 +42,8 @@ export async function generateMetadata(
   };
 }
 
-export default function PostsPage({ params }: Props) {
+export default async function PostsPage(props: Props) {
+  const params = await props.params;
   const post = getPost(params.slug);
   if (!post) return notFound();
 
