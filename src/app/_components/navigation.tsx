@@ -65,7 +65,7 @@ export default function Navigation({ posts }: Props) {
         shouldFilter={false}
       >
         <div className="relative">
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
+          <div className="absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-0.5">
             <span className="flex h-5 w-5 items-center justify-center rounded bg-secondary text-xs text-neutral-700 dark:text-neutral-400">
               <CommandIcon size={10} />
             </span>
@@ -76,9 +76,12 @@ export default function Navigation({ posts }: Props) {
           <Command.Input
             ref={inputRef}
             placeholder="Search..."
-            className="flex h-10 w-full rounded-sm border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 disabled:cursor-not-allowed disabled:opacity-50 pr-16"
+            className="flex h-10 w-full rounded-sm border border-input bg-background px-3 py-2 pr-16 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 disabled:cursor-not-allowed disabled:opacity-50"
             value={searchValue}
             onValueChange={setSearchValue}
+            onBlur={(e) => {
+              e.target.focus();
+            }}
             autoFocus
           />
         </div>

@@ -15,9 +15,6 @@ const config = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  experimental: {
-    turbo: {},
-  },
 };
 
 export default withContentlayer(config);

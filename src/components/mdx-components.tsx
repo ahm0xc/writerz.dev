@@ -64,7 +64,6 @@ const components = {
   ),
   a: ({ className, ...props }) => {
     return (
-      // @ts-expect-error untyped
       <Link
         className={cn(
           "font-semibold text-primary underline underline-offset-4",
